@@ -62,10 +62,106 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
 <section class="ty"><div class="wrap">
   <span class="kicker">Request received</span>
   <h1>Thanks. Your free <span style="background:var(--yellow);padding:0 6px">TSP Retirement Options</span> guide is ready.</h1>
-  <p>Tap the button below to open it now, and save or bookmark it to read later.</p>
-  <p><a class="btn" href="guide.pdf" target="_blank" rel="noopener">Open the guide</a></p>
   <p id="book-wrap"><a id="book-btn" class="btn" href="https://calendar.app.google/qcnXQzxPmTzvcRjg9" target="_blank" rel="noopener">Book Your 30-Min Call with Kevin</a></p>
   <p class="book-alt" style="font-size:.9em;margin-top:6px"><a href="https://calendar.app.google/1PLpYkD9KQjXEShE9" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Short on time? Grab a quick 15-min call</a></p>
+
+  <div class="formcard" id="step2card" style="margin:22px 0 10px">
+    <h2>Optional step 2: help Kevin prepare</h2>
+    <p class="note">Totally optional. A few quick details so your call is more useful.</p>
+    <form id="step2form">
+          <label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9()+\-\s.]{10,20}" placeholder="10-digit mobile or home number">
+          <label for="agency">Employer type / agency</label>
+          <select id="agency" name="agency">
+          <option value="">Select one</option>
+          <option value="Private-employer">Private-sector employer (401(k))</option>
+          <option value="State-local-gov">State or local government</option>
+          <option value="DoD-civilian">Department of Defense (civilian)</option>
+          <option value="Uniformed-services">Uniformed services (military member)</option>
+          <option value="VA">Department of Veterans Affairs</option>
+          <option value="USPS">U.S. Postal Service</option>
+          <option value="DHS">Department of Homeland Security</option>
+          <option value="Treasury">Department of the Treasury (incl. IRS)</option>
+          <option value="SSA">Social Security Administration</option>
+          <option value="HHS">Department of Health and Human Services</option>
+          <option value="DOJ">Department of Justice</option>
+          <option value="USDA">Department of Agriculture</option>
+          <option value="DOI">Department of the Interior</option>
+          <option value="DOT">Department of Transportation (incl. FAA)</option>
+          <option value="DOE">Department of Energy</option>
+          <option value="DOC">Department of Commerce</option>
+          <option value="DOL">Department of Labor</option>
+          <option value="State">Department of State</option>
+          <option value="ED">Department of Education</option>
+          <option value="HUD">Department of Housing and Urban Development</option>
+          <option value="EPA">Environmental Protection Agency</option>
+          <option value="NASA">NASA</option>
+          <option value="GSA">General Services Administration</option>
+          <option value="Other-federal">Other federal agency</option>
+          <option value="Prefer-not">Prefer not to say</option>
+          </select>
+          <label for="years_to_retirement">Years to retirement</label>
+          <select id="years_to_retirement" name="years_to_retirement">
+          <option value="">Select one</option>
+          <option value="separated">Already retired or separated</option>
+          <option value="0-1">Within 1 year</option>
+          <option value="1-2">1 to 2 years</option>
+          <option value="3-5">3 to 5 years</option>
+          <option value="6-10">6 to 10 years</option>
+          <option value="10+">More than 10 years</option>
+          </select>
+          <label for="account_type">Account type</label>
+          <select id="account_type" name="account_type">
+          <option value="">Select one</option>
+          <option value="TSP">TSP</option>
+          <option value="401k">401(k)</option>
+          <option value="Both">Both</option>
+          <option value="Other-employer-plan">Other employer plan</option>
+          </select>
+          <label for="balance_range">Approximate balance</label>
+          <select id="balance_range" name="balance_range">
+          <option value="">Select a range</option>
+          <option value="under-25k">Under $25,000</option>
+          <option value="25k-50k">$25,000 to $50,000</option>
+          <option value="50k-100k">$50,000 to $100,000</option>
+          <option value="100k-250k">$100,000 to $250,000</option>
+          <option value="250k-500k">$250,000 to $500,000</option>
+          <option value="500k+">More than $500,000</option>
+          <option value="prefer-not">Prefer not to say</option>
+          </select>
+          <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <button type="submit">Send details</button>
+          <p id="step2-done" role="status" style="display:none;font-weight:700">Thanks! Your details were sent.</p>
+    </form>
+  </div>
+<script>
+(function(){
+  var ENDPOINT="https://script.google.com/macros/s/AKfycbzL1DK0rAWC_qYveHTkWyffpSFqFxPaPXU666kIThs5dmYmJXjAoCMGHPrhdAGkFojNCw/exec";
+  var f=document.getElementById("step2form"), card=document.getElementById("step2card");
+  if(!f)return;
+  var s={};try{s=JSON.parse(sessionStorage.getItem("mu_lead")||"{}")||{};}catch(e){}
+  var p=new URLSearchParams(location.search);
+  var email=s.email||p.get("email")||"";
+  if(!email){card.style.display="none";return;}
+  function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():"";}
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(v("website"))return;
+    if(!f.checkValidity()){f.reportValidity();return;}
+    var btn=f.querySelector("button");btn.disabled=true;btn.textContent="Sending...";
+    var d=new URLSearchParams();
+    d.set("stage","step2");d.set("offer","tsp");d.set("email",email);
+    if(s.first_name)d.set("first_name",s.first_name);
+    ["phone", "agency", "years_to_retirement", "account_type", "balance_range"].forEach(function(n){d.set(n,v(n));});
+    d.set("utm_source",s.utm_source||p.get("utm_source")||"");d.set("utm_campaign",s.utm_campaign||p.get("utm_campaign")||"");d.set("sub_id",s.utm_campaign||p.get("utm_campaign")||"");
+    d.set("referrer",s.referrer||"");d.set("landing_url",location.href.slice(0,500));
+    fetch(ENDPOINT,{method:"POST",mode:"no-cors",body:d}).then(function(){
+      btn.style.display="none";document.getElementById("step2-done").style.display="block";
+    }).catch(function(){btn.disabled=false;btn.textContent="Send details";alert("Sorry, something went wrong. Please try again.");});
+  });
+})();
+</script>
+  <p>Tap the button below to open it now, and save or bookmark it to read later.</p>
+  <p><a class="btn" href="guide.pdf" target="_blank" rel="noopener">Open the guide</a></p>
   <h2>What happens next</h2>
   <ol class="steps">
     <li>Read the guide at your own pace. It is educational and plain English.</li>

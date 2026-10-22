@@ -76,35 +76,16 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
     <form id="leadform">
           <div class="row">
             <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text" autocomplete="given-name" maxlength="40" required></div>
-            <div><label for="last_name">Last name</label><input id="last_name" name="last_name" type="text" autocomplete="family-name" maxlength="80" required></div>
+            <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="80" required></div>
           </div>
-          <label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="80" required>
-          <label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9()+\-\s.]{10,20}" placeholder="10-digit mobile or home number" required>
-          <label for="state">State</label>
-          <select id="state" name="state" required>
-          <option value="">Select your state</option>
-          <option value="CA">California</option>
-          </select>
-          <small style="display:block;margin-top:6px">Currently available to California residents only. More states coming soon.</small>
-          <label for="age_range">Age range</label>
-          <select id="age_range" name="age_range" required>
-          <option value="">Select your age range</option>
-          <option value="18-29">18 to 29</option>
-          <option value="30-39">30 to 39</option>
-          <option value="40-49">40 to 49</option>
-          <option value="50-59">50 to 59</option>
-          <option value="60-69">60 to 69</option>
-          <option value="70-79">70 to 79</option>
-          <option value="80+">80 or older</option>
-          </select>
-          <label for="coverage_interest">Coverage interest</label>
-          <select id="coverage_interest" name="coverage_interest" required>
+          <label for="in_california">Are you in California?</label>
+          <select id="in_california" name="in_california" required>
           <option value="">Select one</option>
-          <option value="final-expense">Final expense</option>
-          <option value="term">Term life</option>
-          <option value="whole-life">Whole life</option>
-          <option value="not-sure">Not sure yet: help me compare</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
           </select>
+          <p id="not-ca-msg" role="status" style="display:none;background:#FFF3B0;border-left:5px solid var(--yellow);padding:10px 12px;border-radius:6px;font-size:15px;margin:12px 0 0">Thanks! Right now we can only help California residents. We'll let you know when we expand.</p>
+          <input type="hidden" name="referrer" value="">
           <input type="hidden" name="lead_offer" value="life">
           <input type="hidden" name="lead_source" value="money_understood_life_landing">
           <input type="hidden" name="utm_source" value="">
@@ -142,7 +123,7 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
       <p>Not affiliated with the federal government or the Thrift Savings Plan.</p>
 </div></section>
 <script>
-/* Posts the lead to the Google Sheet endpoint, then shows the thank-you page. No third-party scripts. */
+/* Step 1: posts first name + email to the Google Sheet endpoint, then shows the thank-you page. No third-party scripts. */
 (function(){
   var ENDPOINT="https://script.google.com/macros/s/AKfycbzL1DK0rAWC_qYveHTkWyffpSFqFxPaPXU666kIThs5dmYmJXjAoCMGHPrhdAGkFojNCw/exec";
   var OFFER="life";
@@ -150,24 +131,33 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
   var f=document.getElementById("leadform");
   if(!f)return;
   function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():"";}
+  function setH(n,val){var el=f.querySelector('input[name="'+n+'"]');if(el)el.value=val;}
+  var UTM_SOURCE=(p.get("utm_source")||"").slice(0,120), UTM_CAMPAIGN=(p.get("utm_campaign")||"").slice(0,120), REF=(document.referrer||"").slice(0,500);
+  setH("utm_source",UTM_SOURCE);setH("utm_campaign",UTM_CAMPAIGN);setH("referrer",REF);setH("landing_url",location.href.slice(0,500));
+  var ca=document.getElementById("in_california"), msg=document.getElementById("not-ca-msg");
+  if(ca)ca.addEventListener("change",function(){msg.style.display=(ca.value==="No")?"block":"none";});
   f.addEventListener("submit",function(e){
     e.preventDefault();
     if(v("website")){window.location.href="thank-you.html";return;}
+    if(v("in_california")==="No"){msg.style.display="block";return;}
     if(!f.checkValidity()){f.reportValidity();return;}
     var btn=f.querySelector('button[type="submit"],button');
     if(btn){btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent="Sending...";}
     var d=new URLSearchParams();
-    d.set("offer",OFFER);
-    ["first_name","last_name","email","phone","state","years_to_retirement","age_range","agency","coverage_interest"].forEach(function(n){d.set(n,v(n));});
+    d.set("offer",OFFER);d.set("stage","step1");
+    ["first_name","email","lead_variant"].forEach(function(n){var x=v(n);if(x)d.set(n,x);});
+    d.set("state","CA");d.set("in_california","Yes");
     d.set("consent","yes "+new Date().toISOString());
     d.set("consent_text_version",v("consent_text_version"));
-    d.set("utm_source",(p.get("utm_source")||"").slice(0,120));
-    d.set("sub_id",(p.get("utm_campaign")||"").slice(0,120));
+    d.set("utm_source",UTM_SOURCE);d.set("utm_campaign",UTM_CAMPAIGN);d.set("sub_id",UTM_CAMPAIGN);d.set("referrer",REF);
     ["utm_medium","utm_content","utm_term"].forEach(function(k){d.set(k,(p.get(k)||"").slice(0,120));});
     d.set("landing_url",location.href.slice(0,500));
     d.set("website",v("website"));
+    try{sessionStorage.setItem("mu_lead",JSON.stringify({email:v("email"),first_name:v("first_name"),utm_source:UTM_SOURCE,utm_campaign:UTM_CAMPAIGN,referrer:REF,offer:OFFER}));}catch(err){}
+    var q=new URLSearchParams();if(UTM_SOURCE)q.set("utm_source",UTM_SOURCE);if(UTM_CAMPAIGN)q.set("utm_campaign",UTM_CAMPAIGN);
+    var next="thank-you.html"+(q.toString()?"?"+q.toString():"");
     fetch(ENDPOINT,{method:"POST",mode:"no-cors",body:d}).then(function(){
-      window.location.href="thank-you.html";
+      window.location.href=next;
     }).catch(function(){
       if(btn){btn.disabled=false;btn.textContent=btn.dataset.t;}
       alert("Sorry, something went wrong. Please check your connection and try again.");

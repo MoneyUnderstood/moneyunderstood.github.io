@@ -62,10 +62,68 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
 <section class="ty"><div class="wrap">
   <span class="kicker">Request received</span>
   <h1>Thanks. Your free <span style="background:var(--yellow);padding:0 6px">Life Insurance Basics</span> guide is ready.</h1>
-  <p>Tap the button below to open it now, and save or bookmark it to read later.</p>
-  <p><a class="btn" href="guide.pdf" target="_blank" rel="noopener">Open the guide</a></p>
   <p id="book-wrap"><a id="book-btn" class="btn" href="https://calendar.app.google/qcnXQzxPmTzvcRjg9" target="_blank" rel="noopener">Book Your 30-Min Call with Kevin</a></p>
   <p class="book-alt" style="font-size:.9em;margin-top:6px"><a href="https://calendar.app.google/1PLpYkD9KQjXEShE9" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Short on time? Grab a quick 15-min call</a></p>
+
+  <div class="formcard" id="step2card" style="margin:22px 0 10px">
+    <h2>Optional step 2: help Kevin prepare</h2>
+    <p class="note">Totally optional. A few quick details so your call is more useful.</p>
+    <form id="step2form">
+          <label for="last_name">Last name</label><input id="last_name" name="last_name" type="text" autocomplete="family-name" maxlength="80">
+          <label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9()+\-\s.]{10,20}" placeholder="10-digit mobile or home number">
+          <label for="age_range">Age range</label>
+          <select id="age_range" name="age_range">
+          <option value="">Select your age range</option>
+          <option value="18-29">18 to 29</option>
+          <option value="30-39">30 to 39</option>
+          <option value="40-49">40 to 49</option>
+          <option value="50-59">50 to 59</option>
+          <option value="60-69">60 to 69</option>
+          <option value="70-79">70 to 79</option>
+          <option value="80+">80 or older</option>
+          </select>
+          <label for="coverage_interest">Coverage interest</label>
+          <select id="coverage_interest" name="coverage_interest">
+          <option value="">Select one</option>
+          <option value="final-expense">Final expense</option>
+          <option value="term">Term life</option>
+          <option value="whole-life">Whole life</option>
+          <option value="not-sure">Not sure yet: help me compare</option>
+          </select>
+          <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <button type="submit">Send details</button>
+          <p id="step2-done" role="status" style="display:none;font-weight:700">Thanks! Your details were sent.</p>
+    </form>
+  </div>
+<script>
+(function(){
+  var ENDPOINT="https://script.google.com/macros/s/AKfycbzL1DK0rAWC_qYveHTkWyffpSFqFxPaPXU666kIThs5dmYmJXjAoCMGHPrhdAGkFojNCw/exec";
+  var f=document.getElementById("step2form"), card=document.getElementById("step2card");
+  if(!f)return;
+  var s={};try{s=JSON.parse(sessionStorage.getItem("mu_lead")||"{}")||{};}catch(e){}
+  var p=new URLSearchParams(location.search);
+  var email=s.email||p.get("email")||"";
+  if(!email){card.style.display="none";return;}
+  function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():"";}
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(v("website"))return;
+    if(!f.checkValidity()){f.reportValidity();return;}
+    var btn=f.querySelector("button");btn.disabled=true;btn.textContent="Sending...";
+    var d=new URLSearchParams();
+    d.set("stage","step2");d.set("offer","life");d.set("email",email);
+    if(s.first_name)d.set("first_name",s.first_name);
+    ["last_name", "phone", "age_range", "coverage_interest"].forEach(function(n){d.set(n,v(n));});
+    d.set("utm_source",s.utm_source||p.get("utm_source")||"");d.set("utm_campaign",s.utm_campaign||p.get("utm_campaign")||"");d.set("sub_id",s.utm_campaign||p.get("utm_campaign")||"");
+    d.set("referrer",s.referrer||"");d.set("landing_url",location.href.slice(0,500));
+    fetch(ENDPOINT,{method:"POST",mode:"no-cors",body:d}).then(function(){
+      btn.style.display="none";document.getElementById("step2-done").style.display="block";
+    }).catch(function(){btn.disabled=false;btn.textContent="Send details";alert("Sorry, something went wrong. Please try again.");});
+  });
+})();
+</script>
+  <p>Tap the button below to open it now, and save or bookmark it to read later.</p>
+  <p><a class="btn" href="guide.pdf" target="_blank" rel="noopener">Open the guide</a></p>
   <h2>What happens next</h2>
   <ol class="steps">
     <li>Read the guide at your own pace. It is educational and plain English.</li>
