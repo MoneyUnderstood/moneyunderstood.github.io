@@ -105,7 +105,7 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
           <label class="consent"><input type="checkbox" name="tcpa_consent" value="yes" required>
           <span>By checking this box and submitting, I agree that a licensed professional may contact me about premium-financed life insurance at the phone number and email I provided, including by call or text using automated technology. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP to opt out.</span></label>
           <input type="hidden" name="consent_text_version" value="pf-consent-v1-licensed-professional">
-          <button type="submit">Request my free review</button>
+          <button type="submit" data-goatcounter-click="signup-premium-finance">Request my free review</button>
           <p class="fine">No obligation. Money Understood does not issue insurance.</p>
     </form>
   </div>
@@ -169,5 +169,7 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
 })();
 </script>
 <footer class="bot"><div class="wrap">&copy; Money Understood &middot; Real money. No BS. &middot; <a href="../privacy.html" style="color:#FFD400">Privacy Policy</a> &middot; <a href="../terms.html" style="color:#FFD400">Terms</a></div></footer>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(){if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:'submit-premium-finance',event:true});});});</script>
+<script data-goatcounter="https://moneyunderstood.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
