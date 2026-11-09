@@ -60,6 +60,27 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
   <span class="kicker">Free checklist &middot; Open Season 2026</span>
   <h1>Federal Benefits Open Season is <span class="hl">November 9 to December 14</span>. Don't miss a step.</h1>
   <p class="sub">Get the free <strong>Open Season Checklist</strong>: a plain-English, one-page list of what to check before the December 14 deadline.</p>
+  <div class="formcard" id="get-guide" style="margin:4px 0 22px">
+    <h2>Sign Up Here for your free checklist</h2>
+    <p class="note">Free, no obligation. Currently available to California residents.</p>
+    <form id="leadform">
+          <div class="row">
+            <div><label for="first_name">Name</label><input id="first_name" name="first_name" type="text" autocomplete="given-name" maxlength="40" required></div>
+            <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="80" required></div>
+          </div>
+          <label for="state">State</label>
+          <select id="state" name="state" required><option value="CA" selected>California</option></select>
+          <p class="fine" style="margin-top:4px">Currently available to California residents only.</p>
+          <input type="hidden" name="referrer" value=""><input type="hidden" name="lead_variant" value="open-season-2026-v1">
+          <input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="landing_url" value="">
+          <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <label class="consent"><input type="checkbox" name="tcpa_consent" value="yes" required>
+          <span>By checking this box and submitting, I agree that a licensed professional (licensed in California only) may contact me about federal benefits, retirement, and insurance topics at the email or phone number I provide, including by call or text using automated technology. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP to opt out.</span></label>
+          <input type="hidden" name="consent_text_version" value="open-season-consent-v1">
+          <button type="submit" data-goatcounter-click="signup-open-season">Send me the free checklist</button>
+          <p class="fine">Not affiliated with the federal government or OPM. Free, no obligation.</p>
+    </form>
+  </div>
   <ul class="benefits">
     <li>The 2027 health premium increase, explained simply</li>
     <li>The flexible spending account step people forget every year</li>
@@ -80,27 +101,6 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
     </ol>
     <p style="font-size:13px;color:var(--muted)">Source: <a href="https://www.opm.gov/healthcare-insurance/open-season/" target="_blank" rel="noopener">opm.gov</a> Open Season page and Plan Year 2027 Highlights. General education, not a recommendation.</p>
   </section>
-  <div class="formcard" style="margin-top:10px">
-    <h2>Sign Up Here for your free checklist</h2>
-    <p class="note">Free, no obligation. Currently available to California residents.</p>
-    <form id="leadform">
-          <div class="row">
-            <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text" autocomplete="given-name" maxlength="40" required></div>
-            <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="80" required></div>
-          </div>
-          <label for="in_california">Are you in California?</label>
-          <select id="in_california" name="in_california" required><option value="">Select one</option><option value="Yes">Yes</option><option value="No">No</option></select>
-          <p id="not-ca-msg" role="status" style="display:none;background:#FFF3B0;border-left:5px solid var(--yellow);padding:10px 12px;border-radius:6px;font-size:15px;margin:12px 0 0">Thanks! Right now we can only help California residents. We'll let you know when we expand. Meanwhile, see <a href="https://www.opm.gov/healthcare-insurance/open-season/">opm.gov/open-season</a>.</p>
-          <input type="hidden" name="referrer" value=""><input type="hidden" name="lead_variant" value="open-season-2026-v1">
-          <input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="landing_url" value="">
-          <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-          <label class="consent"><input type="checkbox" name="tcpa_consent" value="yes" required>
-          <span>By checking this box and submitting, I agree that a licensed professional (licensed in California only) may contact me about federal benefits, retirement, and insurance topics at the email or phone number I provide, including by call or text using automated technology. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP to opt out.</span></label>
-          <input type="hidden" name="consent_text_version" value="open-season-consent-v1">
-          <button type="submit" data-goatcounter-click="signup-open-season">Send me the free checklist</button>
-          <p class="fine">Not affiliated with the federal government or OPM. Free, no obligation.</p>
-    </form>
-  </div>
 </div>
 <section class="disclaimer"><div class="wrap">
       <p><strong>Not affiliated with the federal government or the Office of Personnel Management (OPM).</strong> Money Understood is an independent education channel and is not affiliated with, endorsed by, or acting on behalf of the U.S. government, OPM, or any federal benefits program. Facts on this page come from opm.gov. Always confirm details at <a href="https://www.opm.gov/healthcare-insurance/open-season/" target="_blank" rel="noopener">opm.gov/open-season</a>.</p>
@@ -120,12 +120,9 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
   function setH(n,val){var el=f.querySelector('input[name="'+n+'"]');if(el)el.value=val;}
   var UTM_SOURCE=(p.get("utm_source")||"").slice(0,120), UTM_CAMPAIGN=(p.get("utm_campaign")||"").slice(0,120), REF=(document.referrer||"").slice(0,500);
   setH("utm_source",UTM_SOURCE);setH("utm_campaign",UTM_CAMPAIGN);setH("referrer",REF);setH("landing_url",location.href.slice(0,500));
-  var ca=document.getElementById("in_california"), msg=document.getElementById("not-ca-msg");
-  if(ca)ca.addEventListener("change",function(){msg.style.display=(ca.value==="No")?"block":"none";});
   f.addEventListener("submit",function(e){
     e.preventDefault();
     if(v("website")){window.location.href="thank-you.html";return;}
-    if(v("in_california")==="No"){msg.style.display="block";return;}
     if(!f.checkValidity()){f.reportValidity();return;}
     var btn=f.querySelector('button[type="submit"],button');
     if(btn){btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent="Sending...";}

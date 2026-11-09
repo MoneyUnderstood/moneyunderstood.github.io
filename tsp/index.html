@@ -64,40 +64,17 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
   <span class="kicker">Free guide &middot; TSP &amp; 401(k)</span>
   <h1>Have a TSP or 401(k) from a previous employer? <span class="hl">Know your rollover options</span> before you choose.</h1>
   <p class="sub">Whether you left federal service or a private-sector job, get the free <strong>TSP &amp; 401(k) Rollover Options</strong> guide, in plain English.</p>
-  <p class="sub" style="font-size:16px">Money Understood is new, and we built it around you: your questions come first, and a real person gets back to you quickly.</p>
-  <ul class="benefits">
-    <li>The main choices side by side: leave it, roll it to a new plan or an IRA, or cash out</li>
-    <li>Tax considerations explained in general terms, with no jargon</li>
-    <li>The questions to ask before anyone moves your money</li>
-  </ul>
-</div></section>
-<div class="wrap">
-  <section class="options" style="padding:34px 0 18px">
-    <h2 style="font-size:24px;font-weight:900;margin:0 0 6px">You have 4 options</h2>
-    <p style="margin:0 0 10px;color:var(--muted)">For a TSP or 401(k) left with a previous employer, the general choices are:</p>
-    <ol class="steps">
-      <li><strong>Leave it where it is.</strong> Many plans let you keep your balance in the plan after you leave, subject to plan rules.</li>
-      <li><strong>Roll it into your new employer's plan.</strong> If your new plan accepts roll-ins, this can keep your savings in one place.</li>
-      <li><strong>Roll it into an IRA.</strong> An IRA may offer different investment choices, fees, and rules than an employer plan.</li>
-      <li><strong>Cash it out.</strong> Withdrawals are generally taxed as income, and if you are under 59&frac12; you may owe a 10% early withdrawal penalty unless an exception applies.</li>
-    </ol>
-    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">Each option has trade-offs in fees, investment choices, taxes, and protections. This is general education, not a recommendation, and no outcome is guaranteed.</p>
-  </section>
-  <div class="formcard" style="margin-top:10px">
+  <div class="formcard" id="get-guide" style="margin:4px 0 22px">
     <h2>Request your free guide</h2>
     <p class="note">Free guide, no obligation. Educational only. Questions? A real person reads every request and gets back to you quickly.</p>
     <form id="leadform">
           <div class="row">
-            <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text" autocomplete="given-name" maxlength="40" required></div>
+            <div><label for="first_name">Name</label><input id="first_name" name="first_name" type="text" autocomplete="given-name" maxlength="40" required></div>
             <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="80" required></div>
           </div>
-          <label for="in_california">Are you in California?</label>
-          <select id="in_california" name="in_california" required>
-          <option value="">Select one</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-          </select>
-          <p id="not-ca-msg" role="status" style="display:none;background:#FFF3B0;border-left:5px solid var(--yellow);padding:10px 12px;border-radius:6px;font-size:15px;margin:12px 0 0">Thanks! Right now we can only help California residents. We'll let you know when we expand.</p>
+          <label for="state">State</label>
+          <select id="state" name="state" required><option value="CA" selected>California</option></select>
+          <p class="fine" style="margin-top:4px">Currently available to California residents only.</p>
           <input type="hidden" name="referrer" value="">
           <input type="hidden" name="lead_offer" value="tsp">
           <input type="hidden" name="lead_variant" value="tsp-401k-v1">
@@ -120,6 +97,25 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
           <p class="fine">Not affiliated with the federal government, the Thrift Savings Plan, or any employer plan. Free guide, no obligation.</p>
     </form>
   </div>
+  <p class="sub" style="font-size:16px">Money Understood is new, and we built it around you: your questions come first, and a real person gets back to you quickly.</p>
+  <ul class="benefits">
+    <li>The main choices side by side: leave it, roll it to a new plan or an IRA, or cash out</li>
+    <li>Tax considerations explained in general terms, with no jargon</li>
+    <li>The questions to ask before anyone moves your money</li>
+  </ul>
+</div></section>
+<div class="wrap">
+  <section class="options" style="padding:34px 0 18px">
+    <h2 style="font-size:24px;font-weight:900;margin:0 0 6px">You have 4 options</h2>
+    <p style="margin:0 0 10px;color:var(--muted)">For a TSP or 401(k) left with a previous employer, the general choices are:</p>
+    <ol class="steps">
+      <li><strong>Leave it where it is.</strong> Many plans let you keep your balance in the plan after you leave, subject to plan rules.</li>
+      <li><strong>Roll it into your new employer's plan.</strong> If your new plan accepts roll-ins, this can keep your savings in one place.</li>
+      <li><strong>Roll it into an IRA.</strong> An IRA may offer different investment choices, fees, and rules than an employer plan.</li>
+      <li><strong>Cash it out.</strong> Withdrawals are generally taxed as income, and if you are under 59&frac12; you may owe a 10% early withdrawal penalty unless an exception applies.</li>
+    </ol>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">Each option has trade-offs in fees, investment choices, taxes, and protections. This is general education, not a recommendation, and no outcome is guaranteed.</p>
+  </section>
   <section class="faq">
     <h2>Quick answers</h2>
       <details><summary>Is this from the TSP or the government?</summary><p>No. Money Understood is an independent education channel. It is not affiliated with, endorsed by, or connected to the federal government, the Office of Personnel Management, the Federal Retirement Thrift Investment Board, or the Thrift Savings Plan.</p></details>
@@ -148,12 +144,9 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
   function setH(n,val){var el=f.querySelector('input[name="'+n+'"]');if(el)el.value=val;}
   var UTM_SOURCE=(p.get("utm_source")||"").slice(0,120), UTM_CAMPAIGN=(p.get("utm_campaign")||"").slice(0,120), REF=(document.referrer||"").slice(0,500);
   setH("utm_source",UTM_SOURCE);setH("utm_campaign",UTM_CAMPAIGN);setH("referrer",REF);setH("landing_url",location.href.slice(0,500));
-  var ca=document.getElementById("in_california"), msg=document.getElementById("not-ca-msg");
-  if(ca)ca.addEventListener("change",function(){msg.style.display=(ca.value==="No")?"block":"none";});
   f.addEventListener("submit",function(e){
     e.preventDefault();
     if(v("website")){window.location.href="thank-you.html";return;}
-    if(v("in_california")==="No"){msg.style.display="block";return;}
     if(!f.checkValidity()){f.reportValidity();return;}
     var btn=f.querySelector('button[type="submit"],button');
     if(btn){btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent="Sending...";}
