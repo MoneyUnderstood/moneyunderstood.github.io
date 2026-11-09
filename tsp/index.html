@@ -56,6 +56,22 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
 .steps li{counter-increment:s;position:relative;padding:12px 12px 12px 52px;margin:10px 0;border:2px solid var(--line);border-radius:8px}
 .steps li:before{content:counter(s);position:absolute;left:12px;top:10px;width:28px;height:28px;border-radius:50%;background:var(--yellow);color:var(--navy);font-weight:900;text-align:center;line-height:28px}
 .btn{display:inline-block;background:var(--yellow);color:var(--navy);text-decoration:none;font-weight:900;text-transform:uppercase;padding:14px 20px;border-radius:10px}
+/* compact above-the-fold form (Nov 9) */
+header.top{padding:10px 0}
+.hero{padding:14px 0 20px}
+.hero h1{margin:10px 0 8px}
+.hero .sub{margin:0 0 12px}
+#get-guide{padding:14px 14px 12px;margin:4px 0 18px}
+#get-guide h2{font-size:19px}
+#get-guide p.note{font-size:13px;margin:0 0 4px}
+#get-guide label{margin:6px 0 2px}
+#get-guide input[type=text],#get-guide input[type=email],#get-guide select{padding:9px 10px;font-size:16px}
+#get-guide .row{grid-template-columns:1fr 1fr}
+#get-guide p.fine{margin-top:4px}
+#get-guide .consent{margin:10px 0 2px;font-size:11.5px;line-height:1.35}
+#get-guide button{margin-top:8px;padding:13px;font-size:17px}
+@media(min-width:520px){.hero h1{font-size:34px}}
+@media(max-width:519px){header.top{padding:8px 0}.brand{font-size:13px}.hero{padding:10px 0 18px}.hero .kicker{font-size:11px;padding:3px 8px}.hero h1{font-size:23px;line-height:1.15;margin:8px 0 6px}.hero .sub{font-size:15px;line-height:1.4;margin:0 0 10px}}
 </style>
 </head>
 <body>
@@ -143,6 +159,7 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
   function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():"";}
   function setH(n,val){var el=f.querySelector('input[name="'+n+'"]');if(el)el.value=val;}
   var UTM_SOURCE=(p.get("utm_source")||"").slice(0,120), UTM_CAMPAIGN=(p.get("utm_campaign")||"").slice(0,120), REF=(document.referrer||"").slice(0,500);
+  var SRC_FALLBACK="direct";try{if(REF){SRC_FALLBACK=new URL(REF).hostname.replace(/^(www|m)\./,"")||"direct";}}catch(err){}
   setH("utm_source",UTM_SOURCE);setH("utm_campaign",UTM_CAMPAIGN);setH("referrer",REF);setH("landing_url",location.href.slice(0,500));
   f.addEventListener("submit",function(e){
     e.preventDefault();
@@ -156,7 +173,7 @@ footer.bot{background:var(--navy);color:#C9D3E2;font-size:12px;padding:16px 0;te
     d.set("state","CA");d.set("in_california","Yes");
     d.set("consent","yes "+new Date().toISOString());
     d.set("consent_text_version",v("consent_text_version"));
-    d.set("utm_source",UTM_SOURCE);d.set("utm_campaign",UTM_CAMPAIGN);d.set("sub_id",UTM_CAMPAIGN);d.set("referrer",REF);
+    d.set("utm_source",UTM_SOURCE);d.set("lead_source",UTM_SOURCE||SRC_FALLBACK);d.set("utm_campaign",UTM_CAMPAIGN);d.set("sub_id",UTM_CAMPAIGN);d.set("referrer",REF);
     ["utm_medium","utm_content","utm_term"].forEach(function(k){d.set(k,(p.get(k)||"").slice(0,120));});
     d.set("landing_url",location.href.slice(0,500));
     d.set("website",v("website"));
